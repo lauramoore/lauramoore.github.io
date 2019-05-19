@@ -1,0 +1,31 @@
+---
+title:  Some notes from my experiments with VMs
+---
+1.  Provisioning via vagrant.
+Normally vagrant is ssh access, terminal.  But I wanted a full IDE environment for some development.  
+So added lightweight desktop per guide [https://deparkes.co.uk/2017/10/27/provision-desktop-environment-vagrant/](https://deparkes.co.uk/2017/10/27/provision-desktop-environment-vagrant/)
+```
+c)onfig.vm.provider "virtualbox" do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+     vb.gui = true
+  end
+
+ config.vm.provision "shell", inline: <<-SHELL
+     apt-get install -y  --no-install-recommends lubuntu-desktop
+   SHELL
+```
+2.  Microsoft has made running VisualStudio easy on Unix [https://linuxize.com/post/how-to-install-visual-studio-code-on-ubuntu-18-04/](https://linuxize.com/post/how-to-install-visual-studio-code-on-ubuntu-18-04/)
+```
+sudo apt install software-properties-common apt-transport-https wget
+wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -'
+sudo add-apt-repository "deb https://packages.microsoft.com/repos/vscode stable main"
+sudo apt update
+sudo apt install code
+```
+* note already had wget on my ubuntu
+* took out [arch=amd64] from the deb call and it seemed to default correctly.
+
+3. Sharing github ssh keys.
+Accessing via desktop does not share the keys even with  config.ssh.forward_agent = true  but after SSH onto VM
+and running the ssh check and approving acess git  [sh -T git@github.com](https://help.github.com/en/articles/testing-your-ssh-connection)
+Then visual studio had no issues accessing git.
